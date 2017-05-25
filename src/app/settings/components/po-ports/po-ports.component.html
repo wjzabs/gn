@@ -1,1 +1,16 @@
- <div id="chart"></div>
+<div class="ports">
+    <div class="col1" *ngIf="PWs">
+        <ul id="grouplist" class="listPW list-group">
+            <li *ngFor="let PW of PWs" 
+            class="list-group-item" 
+            [ngClass]="{'active': selectedItem == PW}" (click)="listClick($event, PW)">
+                {{PW.PORT_CODE_ORIG}}=>{{PW.WHSE_CODE}} {{PW.POS}} POs {{PW.PO_CTNS_OPN | number : '1.0-0'}} Ctns
+            </li>
+        </ul>
+    </div>
+
+    <div class="col2">
+        <div class="mytt">tooltip</div>
+        <div id="chart"></div>
+    </div>
+</div>

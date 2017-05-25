@@ -1,7 +1,44 @@
-body {
+:host {
+    display: flex;
+    flex-direction: row;
+    /*position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;*/
+    background-color:  lightsalmon;
+}
+
+.listPW {
+  list-style: none;
+  padding-top: 40px;
+  padding-left: 10px;
+}
+.listPW.active {
+  color: green;
+}
+
+.col1 {
+    display: flex;
+    flex-grow: 1;
+}
+
+.col2 {
+    display: flex;
+    flex-grow: 3;
+}
+
+.ports {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    background-color:  #eff5f5;
+}
+
+/*body {
   margin: 0;
   font-family: arial, sans;
-}
+}*/
 
 .label {
   font-size: 15px;
@@ -46,4 +83,21 @@ circle {
 
 .bubble:hover circle {
   fill-opacity: 1;
+}
+
+
+
+.mytt {
+  position: absolute;
+  text-align: center;
+  width: 180px;
+  height: 100px;
+  padding: 5px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  color: black;
 }

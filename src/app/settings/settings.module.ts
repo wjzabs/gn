@@ -1,3 +1,4 @@
+import { ABSFunctions } from './abs';
 import { SettingsService } from 'app/settings/settings.service';
 import { BulletsComponent } from 'app/settings/components/bullets/bullets.component';
 import { RouterModule } from '@angular/router';
@@ -24,7 +25,7 @@ import { FormsModule } from '@angular/forms';
     PoPortsComponent,BaseballComponent
     ],
   providers: [
-    SettingsService
+    SettingsService, ABSFunctions
     ],
   exports: [
 

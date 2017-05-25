@@ -176,6 +176,15 @@ export class SettingsService {
       })
   }
 
+  getOpenPOsByPort() : Observable<any> {
+    // return  this.http.post(`${this.baseUrl}GetMachineLocations`, null, this.getHeaders())
+    return  this.http.post(`${this.baseUrl}GetOpenPOsByPort`, this.getHeaders())
+      .map((response:Response) => {
+        // let x:any = response.json();
+        return response.json();
+      })
+  }
+
   getPO (PO_ORDER_NO) : Observable<any> {
     let body = {"PO_ORDER_NO": PO_ORDER_NO};
     let headers = new Headers();
