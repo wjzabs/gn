@@ -111,10 +111,10 @@ private view: any;
     d3.select("svg").remove();
 
 
-    this.zoom = d3.zoom()
-    .scaleExtent([1, 40])
-    .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
-    .on("zoom", this.zoomed);
+    // this.zoom = d3.zoom()
+    // .scaleExtent([1, 40])
+    // .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
+    // .on("zoom", this.zoomed);
 
 
     this.svg = d3.select("#chart")
@@ -125,16 +125,13 @@ private view: any;
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
     //  .call(this.zoom);
 
-
-
-
     // this.xScale = d3.scaleLinear()
     this.xScale = d3.scaleTime()
       .range([0, this.width]);
 
     //scaleLog
     //scaleLinear
-    this.yScale = d3.scaleLinear()
+    this.yScale = d3.scaleLog()
       .range([this.height, 0]);
 
     this.radius = d3.scaleSqrt()
@@ -357,14 +354,15 @@ private view: any;
       });
 
 
-this.view = this.svg.append("rect")
-    .attr("class", "view")
-    .attr("x", 0.5)
-    .attr("y", 0.5)
-    .attr("width", this.width - 1)
-    .attr("height", this.height - 1);
+// this.view = this.svg.append("rect")
+//     .attr("class", "view")
+//     .attr("x", 0.5)
+//     .attr("y", 0.5)
+//     .attr("width", this.width - 1)
+//     .attr("height", this.height - 1);
 
-    // });
+
+// this.svg.call(this.zoom);
 
   }
 
@@ -377,22 +375,16 @@ this.view = this.svg.append("rect")
 
 
  
-  zoomed() {
-  this.view.attr("transform", d3.event.transform);
-  this.gX.call(this.xAxis.scale(d3.event.transform.rescaleX(this.xScale)));
-  this.gY.call(this.yAxis.scale(d3.event.transform.rescaleY(this.yScale)));
-}
- resetted() {
-  this.svg.transition()
-      .duration(750)
-      .call(this.zoom.transform, d3.zoomIdentity);
-}
-
-
-//  zoomed() {
-//   this.svg.select(".x.axis").call(this.xAxis);
-//   this.svg.select(".y.axis").call(this.yAxis);
+//   zoomed() {
+//   this.view.attr("transform", d3.event.transform);
+//   this.gX.call(this.xAxis.scale(d3.event.transform.rescaleX(this.xScale)));
+//   this.gY.call(this.yAxis.scale(d3.event.transform.rescaleY(this.yScale)));
 // }
- 
+//  resetted() {
+//   this.svg.transition()
+//       .duration(750)
+//       .call(this.zoom.transform, d3.zoomIdentity);
+// }
+
 
 }
