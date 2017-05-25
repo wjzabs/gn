@@ -1,0 +1,128 @@
+what is the difference between using angular-cli-json
+(which is where we installed the bootstrap css references after doing an npm install)
+and inserting a <link reference to a font file
+how would you know when to do one and no the other
+
+I have recently integrated d3 and used a different method
+where i did an npm install for d3, and then do imports
+
+when would you copy the files locally so that you can "work on the bus"
+instead of using cdns, etc.
+what happens if your network goes down?  do these files stay magically cached?
+
+order of entries in      
+"styles": [
+        "styles.css",
+        "../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      ],
+
+where is app root?
+see title-bar html <img src="assets/logo.png" <img src="/assets/logo.png" <img src="./assets/logo.png"
+
+in vs code what makes a file stick to the top vs get swapped out, 
+like fw.module and app.module - they do not stick
+
+when to use a div or a or span or p
+
+how to know how many px - and what about other displays?
+div {
+    display: inline;
+    margin-left: 34px;
+}
+
+in title-bar.component.html
+<div class="title-bar user-title-bar">
+why won't the user-title-bar override the title-bar?
+why can't you set up a default color in title-bar and then override it in user-title-bar?
+
+any way to control the naming conventions (like if you don't want component)
+any way to control the pathing (like '../app instead of './..app)
+import { StatusBarComponent } from './../app/status-bar/status-bar.component';
+
+where is the .js files?
+webpack executes from memory - but can you get them generated?
+
+memory leaks if you do not unsubscribe
+I hear alot about this
+but then I get the advice that Angular takes care of it for you (http, routing)
+Here we have a directive and now I have to worry about it, and I implement onDestroy
+is there a way to see the memory leak if I did not handle it?
+BD says to check out developer tools in chrome
+
+How do you know which are onXXX vs ngOnXXX?
+
+css in menuItemComponent that is required for popup displays - no clue
+:host:not(.parent-is-popup) {
+    margin-left: 16px;
+    width: auto;
+}
+
+menu.component.html
+[ngClass]="{'vertical-menu': menuService.isVertical }">
+does this add a class, or does it set the class?
+
+is there a reason for special syntax for setting router-link-active?
+routerLinkActive="router-link-active">
+
+
+
+popup-menu = no need to bind the class, just set it directly
+<li *ngFor="let item of menu">
+    <fw-menu-item 
+      [ngClass]="{'vertical-menu': menuService.isVertical }"
+      [item]="item" class="in-popup"
+      >
+    </fw-menu-item>
+</li>
+
+menu-item
+1 Don't understand capitalization of events
+2 why passing in $event?
+  @HostListener('mouseleave', ['$event']) 
+  onMouseLeave(event) : void {
+    if (!this.menuService.isVertical) {
+      this.mouseInItem = false;
+    }
+  }
+ 
+
+ menu-item
+ <div class="menu-item"
+[routerLink]="item.route"
+routerLinkActive="router-link-active" <- why not []
+[ngClass]="{'verticalc-menu': menuService.isVertical, 
+'routerLinkActive'=isActiveRoute }"
+'router-link-active': isActiveRoute }">
+(click)="menuService.showingLeftSideMenu=false">
+  <span class="glyphicon {{ item.icon}}"></span>
+  <span>{{ item.text.toUpperCase() }}</span>
+</div>
+<fw-popup-menu
+  *ngIf="mouseInPopup || mouseInItem"
+  [menu]='item.submenu'
+  [ngClass]="{'vertical-menu': menuService.isVertical}"
+  (mouseleave)="onPopupMouseLeave($event)"
+  (mouseenter)="onPopupMouseEnter($event)"
+  [style.left.px]="popupLeft"
+  [style.top.px]="popupTop"> 
+</fw-popup-menu>
+
+how to keep
+(click)="menuService.showingLeftSideMenu=false"
+
+<div class="menu-item"
+    [ngClass]="{'verticalc-menu': menuService.isVertical, 'routerLinkActive': isActiveRoute }"
+    (click)="menuService.showingLeftSideMenu=false">
+  <span class="glyphicon {{ item.icon}}"></span>
+  <span>{{ item.text.toUpperCase() }}</span>
+
+  <span *ngIf="item.submenu && !parentIsPopup && !menuService.isVertical"
+    class="glyphicon glyphicon-menu-down"></span>
+  <span *ngIf="item.submenu && parentIsPopup && !menuService.isVertical"
+    class="glyphicon glyphicon-menu-right"></span>
+  <span *ngIf="item.submenu && menuService.isVertical && !(mouseInPopup || mouseInItem)"
+    class="glyphicon glyphicon-menu-left"></span>
+  <span *ngIf="item.submenu && menuService.isVertical && (mouseInPopup || mouseInItem)"
+    class="glyphicon glyphicon-menu-down"></span>
+    
+</div>

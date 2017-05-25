@@ -1,0 +1,21 @@
+<!--<div *ngIf="!screenService.isLarge()" -->
+<div *screenBelowLarge
+class="title-bar-small user-title-bar">
+  <span class="glyphicon glyphicon-menu-hamburger"
+  (click)="menuService.toggleLeftSideMenu()"></span>
+  <div class="small-image-holder">
+    <img class="small-image" src="assets/logo.png">
+  </div>
+  <span class="glyphicon glyphicon-option-vertical"></span>
+</div>
+
+<!--<div *ngIf="screenService.isLarge()" -->
+<div *screenLarge 
+class="title-bar user-title-bar">
+  <img src="assets/logo.png" alt="NY Accessory Group Logo">
+  <div class="menu-area">
+    <fw-top-bar>
+    </fw-top-bar>
+    <fw-menu *ngIf="!menuService.isVertical"></fw-menu>
+  </div>
+</div>
