@@ -9,6 +9,19 @@
     background-color:  lightsalmon;
 }
 
+
+.view {
+  /*fill: url(#gradient);*/
+  fill: transparent;
+  /*stroke: #000;*/
+}
+
+.svg-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
 .listPW {
   list-style: none;
   padding-top: 40px;

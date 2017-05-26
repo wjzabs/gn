@@ -27,7 +27,9 @@ export class PoPortsComponent implements OnInit {
   private gX: any;
   private gY: any;
   private selectedItem;
-private view: any;
+  private view: any;
+  private g: any;
+  private group: any;
 
   POTORDR1s: any[];
   PWs: any[];
@@ -69,13 +71,13 @@ private view: any;
 
 
           if (this.PWs.length) {
-          this.PWs.sort(function (a, b) {
-            if (a.PORT_CODE_ORIG + a.WHSE_CODE < b.PORT_CODE_ORIG + b.WHSE_CODE)
-              return -1;
-            if (a.PORT_CODE_ORIG + a.WHSE_CODE > b.PORT_CODE_ORIG + b.WHSE_CODE)
-              return 1;
-            return 0;
-          });
+            this.PWs.sort(function (a, b) {
+              if (a.PORT_CODE_ORIG + a.WHSE_CODE < b.PORT_CODE_ORIG + b.WHSE_CODE)
+                return -1;
+              if (a.PORT_CODE_ORIG + a.WHSE_CODE > b.PORT_CODE_ORIG + b.WHSE_CODE)
+                return 1;
+              return 0;
+            });
 
             this.selectedItem = this.PWs[1];
             this.drawChart();
@@ -95,7 +97,7 @@ private view: any;
     // }
   }
 
- // parseTime = d3.timeParse("%d-%b-%y");
+  // parseTime = d3.timeParse("%d-%b-%y");
 
   drawChart() {
 
@@ -103,18 +105,13 @@ private view: any;
     console.log(this.data);
 
     let that = this; // need that whenever this is used in a function that is part of a return
+    // this.that = this;
 
     this.margin = { top: 30, right: 150, bottom: 40, left: 50 };
     this.width = 1300 - this.margin.left - this.margin.right;
     this.height = 600 - this.margin.top - this.margin.bottom;
 
     d3.select("svg").remove();
-
-
-    // this.zoom = d3.zoom()
-    // .scaleExtent([1, 40])
-    // .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
-    // .on("zoom", this.zoomed);
 
 
     this.svg = d3.select("#chart")
@@ -124,6 +121,39 @@ private view: any;
       .append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")")
     //  .call(this.zoom);
+
+
+    let zoomed = function () {
+      // that.view.attr("transform", d3.event.transform);
+      // that.gX.call(that.xAxis.scale(d3.event.transform.rescaleX(that.xScale)));
+      // that.gY.call(that.yAxis.scale(d3.event.transform.rescaleY(that.yScale)));
+      that.gX.attr("transform", d3.event.transform);
+      that.gY.attr("transform", d3.event.transform);
+      that.g.attr("transform", d3.event.transform);
+      //that.group.call(that.xAxis.scale(d3.event.transform.rescaleX(that.xScale)));
+      // that.group.call(that.yAxis.scale(d3.event.transform.rescaleY(that.yScale)));
+    }
+
+    this.view = this.svg.append("rect")
+      .attr("class", "view")
+      .attr("x", 0.5)
+      .attr("y", 0.5)
+      .attr("width", this.width - 1)
+      .attr("height", this.height - 1)
+    .style("fill", "none")
+    .style("pointer-events", "all")
+    .call(d3.zoom()
+        .scaleExtent([1 / 2, 10])
+        .on("zoom", zoomed));
+
+
+    // this.zoom = d3.zoom()
+    //   .scaleExtent([1, 40])
+    //   .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
+    //   .on("zoom", zoomed);
+
+
+
 
     // this.xScale = d3.scaleLinear()
     this.xScale = d3.scaleTime()
@@ -137,18 +167,15 @@ private view: any;
     this.radius = d3.scaleSqrt()
       .range([2, 8]);
 
-    this.xAxis = d3.axisBottom(this.xScale)
-      .tickSize(-1 * this.height)
+    // this.xAxis = d3.axisBottom(this.xScale)
+    //   .tickSize(-1 * this.height)
+    this.xAxis = d3.axisTop(this.xScale)
+      .tickSize(-1 * this.height)      
     //  .scale(this.xScale);
 
     this.yAxis = d3.axisLeft(this.yScale)
-      .tickSize(-1 * this.width)
-//       .tickFormat(function (d) {
-//         return this.yScale.tickFormat(4,d3.format(",d"))(d)
-// })
-
-
-    //  .scale(this.yScale)
+      .tickSize(5)
+      .ticks(4, ",d")
 
     this.color = d3.scaleOrdinal(d3.schemeCategory10);
     // this.color = d3.scaleCategory20();
@@ -167,17 +194,9 @@ private view: any;
       } else {
         j = VEND_CODEs[VEND_CODE];
       }
-      // VEND_CODEs[VEND_CODE].PO_CTNS_OPN += this.data[i].PO_CTNS_OPN;
-      // output[VEND_CODEs[VEND_CODE]-1].PO_CTNS_OPN += this.data[i].PO_CTNS_OPN
       output[j - 1].PO_CTNS_OPN += this.data[i].PO_CTNS_OPN
     }
-    // console.log("VEND_CODEs",VEND_CODEs);
-
-    // for( i=0; i<VEND_CODEs.length; i++) {
-    //   output.push(VEND_CODEs[i]);
-    // }
-
-
+  
     // console.log("output",output);  // why does this display as sorted already?
 
     output.sort(function (a, b) { return b.PO_CTNS_OPN - a.PO_CTNS_OPN })
@@ -191,18 +210,11 @@ private view: any;
       let VEND_CODE = output[i].VEND_CODE;
       VEND_CODEs[VEND_CODE] = true;
     }
-    //   console.log("vendors",VEND_CODEs);
-    //    console.log("output 10",output);
 
-
-    // console.log(this.data);
     // data pre-processing
     this.data.forEach(function (d: any) {
       d.y = +d["PO_CTNS_OPN"];
       d.r = +d["PO_QTY_OPN"];
-      // d.PO_DATE_SHIP_BY = dt => d3.timeParse("%d-%b-%y");
-      // d.PO_DATE_SHIP_BY = that.parseTime(d.PO_DATE_SHIP_BY);
-      // d.PO_DATE_SHIP_BY = Date.parse(d.PO_DATE_SHIP_BY);
       d.x = Date.parse(d.PO_DATE_SHIP_BY);
       d.VEND_CODE2 = VEND_CODEs[d.VEND_CODE] ? d.VEND_CODE : 'OTHER';
     });
@@ -235,18 +247,9 @@ private view: any;
       return d.r;
     })).nice();
 
-
-// var gX = svg.append("g")
-//     .attr("class", "axis axis--x")
-//     .call(xAxis);
-
-// var gY = svg.append("g")
-//     .attr("class", "axis axis--y")
-//     .call(yAxis);
-
-
     this.gX = this.svg.append("g")
-      .attr("transform", "translate(0," + this.height + ")")
+     // .attr("transform", "translate(0," + that.height + ")")
+      .attr("transform", "translate(0,0)")
       .attr("class", "x axis")
       .call(this.xAxis);
 
@@ -255,7 +258,9 @@ private view: any;
       .attr("class", "y axis")
       .call(this.yAxis);
 
-    let group = this.svg.selectAll("g.bubble")
+    this.g = this.svg.append("g");
+
+    this.group = this.g.selectAll("g.bubble") // this.svg.selectAll("g.bubble")
       .data(this.data)
       .enter().append("g")
       .attr("class", "bubble")
@@ -263,7 +268,7 @@ private view: any;
         return "translate(" + that.xScale(d.x) + "," + that.yScale(d.y) + ")"
       });
 
-    group
+    this.group
       .append("circle")
       .attr("r", function (d) { return that.radius(d.r); })
       .style("fill", function (d) {
@@ -290,18 +295,12 @@ private view: any;
           .style("opacity", 0);
       })
 
-    group
+    this.group
       .append("text")
       .attr("x", function (d) { return that.radius(d.r); })
       .attr("alignment-baseline", "middle")
       .text(function (d) {
         return d["PO_ORDER_NO"];
-      // })
-      // .append("text")
-      // .attr("x", function (d) { return that.radius(d.r); })
-      // .attr("alignment-baseline", "bottom")
-      // .text(function (d) {
-      //   return d["PO_ORDER_NO"];
       });
 
     this.svg.append("text")
@@ -353,38 +352,21 @@ private view: any;
           .style("opacity", 1);
       });
 
+ //   this.svg.call(this.zoom);
 
-// this.view = this.svg.append("rect")
-//     .attr("class", "view")
-//     .attr("x", 0.5)
-//     .attr("y", 0.5)
-//     .attr("width", this.width - 1)
-//     .attr("height", this.height - 1);
+    let resetted = function () {
+      that.svg.transition()
+        .duration(750)
+        .call(that.zoom.transform, d3.zoomIdentity);
+    }
 
-
-// this.svg.call(this.zoom);
-
+    // d3.select("button")
+    //   .on("click", resetted);
   }
-
 
   listClick(event, newValue) {
-    console.log(newValue);
-    this.selectedItem = newValue;  // don't forget to update the model here
+   // console.log(newValue);
+    this.selectedItem = newValue;
     this.drawChart();
   }
-
-
- 
-//   zoomed() {
-//   this.view.attr("transform", d3.event.transform);
-//   this.gX.call(this.xAxis.scale(d3.event.transform.rescaleX(this.xScale)));
-//   this.gY.call(this.yAxis.scale(d3.event.transform.rescaleY(this.yScale)));
-// }
-//  resetted() {
-//   this.svg.transition()
-//       .duration(750)
-//       .call(this.zoom.transform, d3.zoomIdentity);
-// }
-
-
 }

@@ -16,7 +16,7 @@ export class UserService implements UserApi {
         console.log ('UserService.signIn: ' + username + ' ' + password + ' ' + rememberMe);
 
         this.isAuthenticated = true;
-        return Observable.of({}).delay(2000);
+        return Observable.of({}).delay(1000);
 
         // return Observable.of({}).delay(2000).flatMap(
         //     (x)=> {
