@@ -84,12 +84,6 @@ export class BaseballComponent implements OnInit {
     //  .scale(this.yScale)
 
     this.color = d3.scaleOrdinal(d3.schemeCategory10);
-    // this.color = d3.scaleCategory20();
-   // this.color = d3.scaleCategory20().domain([0, this.data.length]).range(<any[]>['#d95f02', '#7570b3', '#d95f02', '#7570b3', '#d95f02', '#7570b3']);
-
-    // d3.csv("baseball.csv", function (error, data) {
-    //   that.data = data;
-    // });
 
     console.log(this.data);
     // data pre-processing
@@ -151,11 +145,6 @@ export class BaseballComponent implements OnInit {
           .transition().duration(500)
           .style("opacity", 0);
       })
-      // .transition()
-      // .delay((d, i) => i * 10)
-      // .attr('y', d => this.yScale(d[3]))
-      // .attr('height', d => this.height - this.yScale(d[3]));
-
 
     group
       .append("text")
@@ -213,8 +202,5 @@ export class BaseballComponent implements OnInit {
         d3.selectAll(".bubble")
           .style("opacity", 1);
       });
-      
-    // });
-
   }
 }

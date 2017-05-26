@@ -34,11 +34,6 @@ export class PoPortsComponent implements OnInit {
   POTORDR1s: any[];
   PWs: any[];
   errorMessage: any;
-  // cols: any[];
-  // brands: any[];
-  // selectedPOs: any[];
-  // showPO: string;
-  // POTORDR2s: any[];
 
   constructor(
     private absFunctions: ABSFunctions,
@@ -46,29 +41,12 @@ export class PoPortsComponent implements OnInit {
 
   ngOnInit() {
 
-    //http://blockbuilder.org/syntagmatic/ba23d525f8986cb0ebf30a5dd30c9dd2
-
-    // this.data = [
-    //   { "CUST_CODE": "FAMILY DOLL", "PO_ORDER_NO": "047144", "VEND_CODE": "TAICANG", "PO_CTNS_OPN": 23, "PO_DATE_SHIP_BY": "2017-06-14T00:00:00", "PO_QTY_OPN": 37 },
-    //   { "CUST_CODE": "WALMART", "PO_ORDER_NO": "047280", "VEND_CODE": "SUZHOU", "PO_CTNS_OPN": 24, "PO_DATE_SHIP_BY": "2017-07-24T00:00:00", "PO_QTY_OPN": 81 },
-    //   { "CUST_CODE": "", "PO_ORDER_NO": "047241", "VEND_CODE": "LUCYZONE", "PO_CTNS_OPN": 77, "PO_DATE_SHIP_BY": "2017-08-04T00:00:00", "PO_QTY_OPN": 59 },
-    //   { "CUST_CODE": "FAMILY DOLL", "PO_ORDER_NO": "047231", "VEND_CODE": "SINOHONEST", "PO_CTNS_OPN": 50, "PO_DATE_SHIP_BY": "2017-05-14T00:00:00", "PO_QTY_OPN": 60 },
-    //   { "CUST_CODE": "WALMART", "PO_ORDER_NO": "047174", "VEND_CODE": "LAPSUNSTRA", "PO_CTNS_OPN": 31, "PO_DATE_SHIP_BY": "2017-06-30T00:00:00", "PO_QTY_OPN": 53 }
-    // ]
-
-
-
-
     this.settingsService.getOpenPOsByPort()
       .subscribe(
       x => {
         if (x) {
-          // console.log(x);
-          //  this.POTORDR1s = x; // x.slice(x.length-5);
-          //  this.POTORDR1s =   x.slice(x.length-30); // performance sucks primeNg DataTable
           this.POTORDR1s = x.POTORDR1s; //x.slice(x.length-30); // data.json();
           this.PWs = x.POTORDR1_PORT_WHSEs
-
 
           if (this.PWs.length) {
             this.PWs.sort(function (a, b) {
@@ -97,8 +75,6 @@ export class PoPortsComponent implements OnInit {
     // }
   }
 
-  // parseTime = d3.timeParse("%d-%b-%y");
-
   drawChart() {
 
     this.data = this.POTORDR1s.filter(d => d.PORT_CODE_ORIG == this.selectedItem.PORT_CODE_ORIG && d.WHSE_CODE == this.selectedItem.WHSE_CODE);
@@ -112,7 +88,6 @@ export class PoPortsComponent implements OnInit {
     this.height = 600 - this.margin.top - this.margin.bottom;
 
     d3.select("svg").remove();
-
 
     this.svg = d3.select("#chart")
       .append("svg")
@@ -130,8 +105,6 @@ export class PoPortsComponent implements OnInit {
       that.gX.attr("transform", d3.event.transform);
       that.gY.attr("transform", d3.event.transform);
       that.g.attr("transform", d3.event.transform);
-      //that.group.call(that.xAxis.scale(d3.event.transform.rescaleX(that.xScale)));
-      // that.group.call(that.yAxis.scale(d3.event.transform.rescaleY(that.yScale)));
     }
 
     this.view = this.svg.append("rect")
@@ -145,15 +118,6 @@ export class PoPortsComponent implements OnInit {
     .call(d3.zoom()
         .scaleExtent([1 / 2, 10])
         .on("zoom", zoomed));
-
-
-    // this.zoom = d3.zoom()
-    //   .scaleExtent([1, 40])
-    //   .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
-    //   .on("zoom", zoomed);
-
-
-
 
     // this.xScale = d3.scaleLinear()
     this.xScale = d3.scaleTime()
@@ -216,6 +180,10 @@ export class PoPortsComponent implements OnInit {
       d.y = +d["PO_CTNS_OPN"];
       d.r = +d["PO_QTY_OPN"];
       d.x = Date.parse(d.PO_DATE_SHIP_BY);
+      d.xa = 0;
+      d.ya = 0;
+      d.xaa = 0;
+      d.yaa = 0;      
       d.VEND_CODE2 = VEND_CODEs[d.VEND_CODE] ? d.VEND_CODE : 'OTHER';
     });
 
@@ -266,7 +234,36 @@ export class PoPortsComponent implements OnInit {
       .attr("class", "bubble")
       .attr("transform", function (d, i) {
         return "translate(" + that.xScale(d.x) + "," + that.yScale(d.y) + ")"
-      });
+      })
+      .call(d3.drag()
+        .on("start", function (d: any, i) {
+          d3.select(this).raise().classed("drag-active", true);
+          //console.log('drag start', d.xa, d.ya, d3.event);
+          // d.xa = 0;
+          // d.ya = 0;          
+          d.xm0 = d3.event.x;
+          d.ym0 = d3.event.y; 
+          d.xm1 = d3.event.x;
+          d.ym1 = d3.event.y;           
+        }) // this.dragstarted)
+        .on("drag", function (d: any, i) {
+          //console.log('drag drag', d.xa, d.ya, d3.event);
+          d.xm1 = d3.event.x;
+          d.ym1 = d3.event.y;  
+          d.xa = d.xm1 - d.xm0;
+          d.ya = d.ym1 - d.ym0;                  
+          d3.selectAll(".drag-active")
+            .attr("transform", function (d:any, i) {
+              return "translate(" + (that.xScale(d.x) + d.xaa + d.xa) + "," + (that.yScale(d.y) + d.yaa + d.ya) + ")"
+            })       
+        }) // this.dragged)
+        .on("end", function (d: any, i) {
+        //  console.log('drag end', d.xa, d.ya, d3.event)
+          d.xaa = d.xaa + d.xa;
+          d.yaa = d.yaa + d.ya; 
+          d3.select(this).classed("drag-active", false);          
+        }) // this.dragended))
+      )      
 
     this.group
       .append("circle")
@@ -294,7 +291,7 @@ export class PoPortsComponent implements OnInit {
           .transition().duration(500)
           .style("opacity", 0);
       })
-
+      
     this.group
       .append("text")
       .attr("x", function (d) { return that.radius(d.r); })

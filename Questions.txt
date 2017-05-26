@@ -126,3 +126,15 @@ how to keep
     class="glyphicon glyphicon-menu-down"></span>
     
 </div>
+
+
+d3 issues - reviewed with Rob
+CLICK PORTS TWICE
+FILE CSV ISSUES (IMAGES TOO) - needs to be in assets folder - see angular-cli.hson assets array
+BOUNDING TO LEFT SIDE OF CHART - clamp
+ISSUES WITH CSS (SALMON) - containing div, defined as flex, needs flex-grow=1
+LEGEND FOR SUPPLIERS TRUNCATING NAME - make enough margin so that they fit
+
+MAYBE USE LOG FOR Y AXIS
+ZOOM AND PAN
+x EXCLUDE SUPPLIERS
