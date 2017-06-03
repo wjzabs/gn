@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 
 // stolen from https://bl.ocks.org/syntagmatic/ba23d525f8986cb0ebf30a5dd30c9dd2
+// mike's commit
 
 @Component({
   selector: 'app-baseball',
