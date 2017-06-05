@@ -1,5 +1,7 @@
+import { DynamicFormComponent } from 'fw/dynamic-forms/dynamic-form/dynamic-form.component';
+import { DynamicFieldComponent } from 'fw/dynamic-forms/dynamic-field/dynamic-field.component';
 import { RegisterUserComponent } from 'fw/users/register-user/register-user.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignInComponent } from 'fw/users/sign-in/sign-in.component';
 import { RouterModule } from '@angular/router';
 import { MenuItemComponent } from 'fw/menus/menu-item/menu-item.component';
@@ -17,11 +19,12 @@ import { ScreenLarge } from "fw/directives/screen.large.directive";
 import { ScreenBelowLarge } from "fw/directives/screen-below-large.directive";
 import { MenuService } from "fw/services/menu.service";
 import { PopupMenuComponent } from "fw/menus/popup-menu/popup-menu.component";
- 
+import { PanelComponent } from "fw/panels/panel/panel.component";
+
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule, FormsModule
+    RouterModule, FormsModule, ReactiveFormsModule
   ],
   declarations: [
     FrameworkBodyComponent,
@@ -35,7 +38,10 @@ import { PopupMenuComponent } from "fw/menus/popup-menu/popup-menu.component";
     MenuItemComponent,
     PopupMenuComponent,
     SignInComponent,
-    RegisterUserComponent
+    RegisterUserComponent,
+    DynamicFormComponent,
+    DynamicFieldComponent,
+    PanelComponent
     ],
   providers: [
     FrameworkConfigService,
@@ -43,7 +49,11 @@ import { PopupMenuComponent } from "fw/menus/popup-menu/popup-menu.component";
     MenuService
     ],
   exports: [
-    FrameworkBodyComponent
+    FrameworkBodyComponent,
+    DynamicFormComponent,
+    PanelComponent,
+    ScreenLarge,
+    ScreenBelowLarge
   ]
 })
 export class FwModule { }

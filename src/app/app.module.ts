@@ -1,3 +1,4 @@
+import { AppDataService } from './services/app-data.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -17,7 +18,8 @@ import { CountryMaintComponent } from './country-maint/country-maint.component';
 import { AuthenticatedUserComponent } from './authenticated-user/authenticated-user.component';
 import { UserService } from "app/services/user.service";
 import { UserApi } from "fw/users/user-api";
-
+import { CountryPanelComponent } from './panels/country-panel/country-panel.component';
+import { ImagePanelComponent } from './panels/image-panel/image-panel.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { UserApi } from "fw/users/user-api";
     CountryDetailComponent,
     CountryListComponent,
     CountryMaintComponent,
-    AuthenticatedUserComponent
+    AuthenticatedUserComponent,
+    CountryPanelComponent,
+    ImagePanelComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +47,8 @@ import { UserApi } from "fw/users/user-api";
     UserService,
    //  { provide: UserService, useClass: UserService}
     { provide: UserApi, useExisting: UserService},
-    AuthGuard
+    AuthGuard,
+    AppDataService
   ],
   bootstrap: [AppComponent]
 })
